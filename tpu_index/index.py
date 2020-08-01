@@ -1,6 +1,9 @@
 import numpy as np
 import tensorflow as tf
 
+tf.debugging.set_log_device_placement(True) 
+
+
 try:
 #     tpu = tf.distribute.cluster_resolver.TPUClusterResolver('srihari-1-tpu')
     tpu = tf.distribute.cluster_resolver.TPUClusterResolver()
@@ -110,3 +113,9 @@ class TPUIndex:
         Dx = np.array(Dx)[id_sorted]
         Ix = np.array(Ix)[id_sorted]
         return Dx, Ix
+
+
+class TPUHostIndex(Index):
+    def __init__(self, vectors, host_device='/job:worker/replica:0/task:0/device:CPU:0'):
+        with tf.device(host_device):
+            super(TPUHostIndex, self).__init__(vectors, host_device)
