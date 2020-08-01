@@ -118,4 +118,6 @@ class TPUIndex:
 class TPUHostIndex(Index):
     def __init__(self, vectors, host_device='/job:worker/replica:0/task:0/device:CPU:0'):
         with tf.device(host_device):
+            vectors = tf.cast(vectors, dtype=tf.bfloat16)
+            vectors = tf.math.l2_normalize(vectors, axis=1)
             super(TPUHostIndex, self).__init__(vectors, host_device)
